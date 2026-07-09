@@ -80,9 +80,8 @@ const WeeklyReportSchema = new mongoose.Schema(
 );
 
 // Compound index for efficient queries
-WeeklyReportSchema.index({ createdBy: 1, week: -1 });
-WeeklyReportSchema.index({ project: 1 });
-WeeklyReportSchema.index({ status: 1 });
-WeeklyReportSchema.index({ week: -1 });
+WeeklyReportSchema.index({ createdBy: 1, week: 1 });
+WeeklyReportSchema.index({ status: 1, createdBy: 1 });
+WeeklyReportSchema.index({ project: 1, week: 1 });
 
 module.exports = mongoose.model('WeeklyReport', WeeklyReportSchema);
