@@ -19,9 +19,10 @@ export default function AIAssistantPage() {
   const [isTyping, setIsTyping] = useState(false);
 
   const predefinedPrompts = [
-    'Generate weekly team summary',
+    "Summarize this week's work",
+    "Who has pending reports?",
     'Identify current open blockers',
-    'Analyze workload distribution',
+    
   ];
 
   const handleSend = async (text = input) => {
