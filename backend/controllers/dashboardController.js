@@ -33,7 +33,7 @@ exports.getManagerDashboard = async (req, res, next) => {
       WeeklyReport.countDocuments({ status: 'Draft' }),
       User.countDocuments(),
       User.countDocuments({ role: 'manager', status: 'active' }),
-      WeeklyReport.find()
+      WeeklyReport.find({}, 'title status createdBy project updatedAt')
         .populate('createdBy', 'name email avatar')
         .populate('project', 'name')
         .sort({ updatedAt: -1 })
@@ -91,7 +91,7 @@ exports.getMemberDashboard = async (req, res, next) => {
           }
         }
       ]),
-      WeeklyReport.find({ createdBy: userId })
+      WeeklyReport.find({ createdBy: userId }, 'title status week project createdAt')
         .populate('project', 'name')
         .sort({ createdAt: -1 })
         .limit(5),
