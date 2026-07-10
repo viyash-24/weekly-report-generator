@@ -88,7 +88,7 @@ export default function ProjectsPage() {
             onClick={() => { setEditingId(null); setFormData({ name: '', description: '', status: 'Active' }); setShowModal(true); }}
             className="bg-primary text-on-primary py-[8px] px-md rounded flex items-center gap-xs font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm"
           >
-            <span className="material-symbols-outlined icon-fill" style={{ fontSize: '18px' }}>add</span>
+            <span className="material-symbols-outlined icon-fill text-[18px]">add</span>
             New Project
           </button>
         </div>
@@ -122,10 +122,10 @@ export default function ProjectsPage() {
                     <td className="py-sm px-md text-right">
                       <div className="flex justify-end gap-xs">
                         <button onClick={() => openEdit(p)} className="text-primary hover:text-primary-container p-xs rounded hover:bg-surface-container transition-colors" title="Edit">
-                          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit</span>
+                          <span className="material-symbols-outlined text-[18px]">edit</span>
                         </button>
                         <button onClick={() => handleDelete(p._id)} className="text-error hover:text-on-error-container p-xs rounded hover:bg-error-container/20 transition-colors" title="Delete">
-                          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
+                          <span className="material-symbols-outlined text-[18px]">delete</span>
                         </button>
                       </div>
                     </td>
@@ -140,39 +140,67 @@ export default function ProjectsPage() {
       {/* Modal Form */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-surface rounded-lg shadow-lg w-full max-w-md p-lg border border-outline-variant block">
-            <div className="mb-md border-b border-outline-variant pb-sm flex justify-between items-center">
-              <h2 className="text-headline-md font-headline-md text-primary">{editingId ? 'Edit Project' : 'New Project'}</h2>
-              <button onClick={() => setShowModal(false)} className="text-secondary hover:text-primary"><span className="material-symbols-outlined">close</span></button>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-md mt-md">
+          <div className="bg-surface rounded-lg shadow-lg w-[90vw] md:w-[600px] shrink-0 p-xl border border-outline-variant block max-h-[90vh] overflow-y-auto">
+            <div className="mb-lg border-b border-outline-variant pb-md flex justify-between items-center">
               <div>
-                <label className="block text-[12px] font-mono text-secondary mb-xs">Project Name</label>
+                <h2 className="text-headline-md font-headline-md text-primary">{editingId ? 'Edit Project' : 'New Project'}</h2>
+                <p className="text-secondary text-body-md mt-xs">{editingId ? 'Update project details' : 'Create a new project category'}</p>
+              </div>
+              <button onClick={() => setShowModal(false)} className="text-secondary hover:text-primary transition-colors">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="space-y-lg mt-md">
+              <div className="flex flex-col gap-xs">
+                <label className="font-label-md text-label-md text-on-surface-variant">Project Name</label>
                 <input 
                   type="text" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full h-10 border border-outline-variant rounded bg-surface-container-lowest px-sm text-on-surface focus:outline-primary focus:border-primary"
+                  className="w-full border border-outline-variant rounded p-md bg-surface font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  placeholder="e.g. Core Infrastructure"
                 />
               </div>
-              <div>
-                <label className="block text-[12px] font-mono text-secondary mb-xs">Description</label>
+              
+              <div className="flex flex-col gap-xs">
+                <label className="font-label-md text-label-md text-on-surface-variant">Description</label>
                 <textarea 
                   required value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  className="w-full h-24 border border-outline-variant rounded bg-surface-container-lowest p-sm text-on-surface focus:outline-primary focus:border-primary resize-none"
+                  className="w-full border border-outline-variant rounded p-md bg-surface font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
+                  rows={4}
+                  placeholder="What is this project about?"
                 />
               </div>
-              <div>
-                <label className="block text-[12px] font-mono text-secondary mb-xs">Status</label>
-                <select 
-                  value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})}
-                  className="w-full h-10 border border-outline-variant rounded bg-surface-container-lowest px-sm text-on-surface focus:outline-primary focus:border-primary"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Archived">Archived</option>
-                </select>
+              
+              <div className="flex flex-col gap-xs">
+                <label className="font-label-md text-label-md text-on-surface-variant">Status</label>
+                <div className="relative">
+                  <select 
+                    value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})}
+                    className="w-full border border-outline-variant rounded p-md bg-surface font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Archived">Archived</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 pointer-events-none text-secondary">
+                    expand_more
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-end gap-sm pt-md">
-                <button type="button" onClick={() => setShowModal(false)} className="px-md py-sm border border-outline-variant rounded text-secondary hover:bg-surface-container">Cancel</button>
-                <button type="submit" className="px-md py-sm bg-primary text-on-primary rounded hover:bg-surface-tint">Save Project</button>
+              
+              <div className="pt-xl border-t border-outline-variant flex justify-end gap-md">
+                <button 
+                  type="button" 
+                  onClick={() => setShowModal(false)} 
+                  className="px-lg py-md border border-outline text-secondary hover:text-primary hover:border-primary hover:bg-surface-container rounded font-label-lg text-label-lg transition-colors bg-surface"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="px-lg py-md bg-primary text-on-primary hover:bg-surface-tint rounded font-label-lg text-label-lg transition-colors"
+                >
+                  Save Project
+                </button>
               </div>
             </form>
           </div>
