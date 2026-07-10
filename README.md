@@ -256,6 +256,4 @@ npm start       # Start production server
 
 ---
 
-## 📄 License
 
-MIT License
