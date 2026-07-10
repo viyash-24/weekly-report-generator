@@ -32,11 +32,6 @@ exports.getProjects = async (req, res, next) => {
     const { status, search } = req.query;
     const query = {};
 
-    // Members only see projects they're part of
-    if (req.user.role === 'member') {
-      query.members = req.user._id;
-    }
-
     if (status && status !== 'All Projects') query.status = status;
     if (search) {
       query.name = { $regex: search, $options: 'i' };
