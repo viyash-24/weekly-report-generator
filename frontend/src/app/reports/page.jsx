@@ -42,6 +42,17 @@ export default function ReportsPage() {
   const [editingReport, setEditingReport] = useState(null);
   const [viewingReport, setViewingReport] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  const formatDepartment = (department) => {
+    const departmentMap = {
+      engineering: 'Frontend',
+      product: 'UI/UX',
+      design: 'Backend',
+      operations: 'Devops',
+    };
+
+    return departmentMap[department] || department || 'Member';
+  };
   
   // Filters
   const [filterStatus, setFilterStatus] = useState('All');
@@ -49,20 +60,39 @@ export default function ReportsPage() {
   const [filterProject, setFilterProject] = useState('');
   const [filterMember, setFilterMember] = useState('');
 
+  // Debounced states for fast typing
+  const [debouncedWeek, setDebouncedWeek] = useState('');
+  const [debouncedProject, setDebouncedProject] = useState('');
+  const [debouncedMember, setDebouncedMember] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedWeek(filterWeek), 300);
+    return () => clearTimeout(timer);
+  }, [filterWeek]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedProject(filterProject), 300);
+    return () => clearTimeout(timer);
+  }, [filterProject]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedMember(filterMember), 300);
+    return () => clearTimeout(timer);
+  }, [filterMember]);
+
   const fetchReports = async () => {
     if (reports.length === 0) setLoading(true);
     try {
       const params = {};
       if (filterStatus !== 'All') params.status = filterStatus;
-      if (filterWeek) params.week = filterWeek;
-      if (filterProject) params.project = filterProject; // note: backend expects project ID or name regex if implemented
+      if (debouncedWeek) params.week = debouncedWeek;
+      if (debouncedProject) params.project = debouncedProject;
       
       const data = await reportService.getReports(params);
       
-      // Client side filtering for member if backend doesn't support regex name matching yet
       let result = data.data || [];
-      if (filterMember) {
-        result = result.filter(r => r.createdBy?.name?.toLowerCase().includes(filterMember.toLowerCase()));
+      if (debouncedMember) {
+        result = result.filter(r => r.createdBy?.name?.toLowerCase().includes(debouncedMember.toLowerCase()));
       }
       
       setReports(result);
@@ -75,7 +105,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     if (user) fetchReports();
-  }, [user, filterStatus, filterWeek, filterProject, filterMember]);
+  }, [user, filterStatus, debouncedWeek, debouncedProject, debouncedMember]);
 
   const filters = [
     {
@@ -190,7 +220,7 @@ export default function ReportsPage() {
                             )}
                             <div>
                               <p className="font-medium text-on-surface">{memberName}</p>
-                              <p className="text-secondary text-[12px]">{row.createdBy?.department || 'Member'}</p>
+                              <p className="text-secondary text-[12px]">{formatDepartment(row.createdBy?.department)}</p>
                             </div>
                           </div>
                         </td>
