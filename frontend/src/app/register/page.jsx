@@ -133,10 +133,10 @@ export default function RegisterPage() {
                       style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}
                     >
                       <option value="" disabled>Select Dept</option>
-                      <option value="engineering">Engineering</option>
-                      <option value="product">Product</option>
-                      <option value="design">Design</option>
-                      <option value="operations">Operations</option>
+                      <option value="Frontend">Frontend</option>
+                      <option value="UI/UX">UI/UX</option>
+                      <option value="Backend">Backend</option>
+                      <option value="Devops">Devops</option>
                     </select>
                   </div>
                 )}
